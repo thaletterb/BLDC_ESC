@@ -1,6 +1,6 @@
 #
 # This file was generated based on the configuration script:
-#     /Users/brianvuong/workspace_v7/BLDC_ESC/empty_min.cfg
+#     /Users/brianvuong/workspace_v7/BLDC_ESC/main.cfg
 #
 # This makefile may be included in other makefiles that need to build
 # the libraries containing the compiled source files generated as
