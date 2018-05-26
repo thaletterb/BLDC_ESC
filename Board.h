@@ -82,6 +82,8 @@ extern "C" {
 #define Board_RF430CL330_ADDR       (0x28)
 #define Board_TPL0401_ADDR          (0x40)
 
+#define Board_GPIO_P1_6             MSP_EXP430F5529LP_P1_6
+
 #ifdef __cplusplus
 }
 #endif
