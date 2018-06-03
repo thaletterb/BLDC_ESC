@@ -49,9 +49,7 @@
 /* Board Header file */
 #include "Board.h"
 
-#include <msp430.h>
-#include <timer_a.h>
-#include <timer_b.h>
+#include "PWM.h"
 
 #define TASKSTACKSIZE   512
 
@@ -68,19 +66,10 @@ Void sendPulseToESC(void)
     while (1) {
         Semaphore_pend(semaphore0, BIOS_WAIT_FOREVER);
 
-        WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
-        P1DIR |= BIT2+BIT3;                       // P1.2 and P1.3 output
-        P1SEL |= BIT2+BIT3;                       // P1.2 and P1.3 options select
-        TA0CCR0 = 20972-1;                          // PWM Period
-        TA0CCTL1 = OUTMOD_7;                      // CCR1 reset/set
-        TA0CCR1 = 1050;                            // CCR1 PWM duty cycle
-        TA0CTL = TASSEL_2 + MC_1 + TACLR + ID_3;
-
+        PWM_setDutyCycleTimeOn(1.10);
         GPIO_toggle(Board_LED0);
     }
 }
-
-void PWM_init(void);
 
 /*
  *  ======== main ========
@@ -117,24 +106,3 @@ void CLK_50Hz()
 
 }
 
-
-void PWM_init(void)
-{
-//    // Start TIMER_A
-//    Timer_A_outputPWMParam timerA_params = {0};
-//    timerA_params.clockSource           = TIMER_A_CLOCKSOURCE_SMCLK;
-//    timerA_params.clockSourceDivider    = TIMER_A_CLOCKSOURCE_DIVIDER_2;
-//    timerA_params.compareOutputMode     = TIMER_A_OUTPUTMODE_RESET_SET;
-//    timerA_params.compareRegister       = TIMER_A_CAPTURECOMPARE_REGISTER_1;
-//    timerA_params.dutyCycle             = 2097;
-//    timerA_params.timerPeriod           = 20972;
-//    Timer_A_outputPWM(__MSP430_BASEADDRESS_T0A5__, &timerA_params);
-
-    WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
-    P1DIR |= BIT2+BIT3;                       // P1.2 and P1.3 output
-    P1SEL |= BIT2+BIT3;                       // P1.2 and P1.3 options select
-    TA0CCR0 = 20972-1;                          // PWM Period
-    TA0CCTL1 = OUTMOD_7;                      // CCR1 reset/set
-    TA0CCR1 = 525;                            // CCR1 PWM duty cycle
-    TA0CTL = TASSEL_2 + MC_1 + TACLR + ID_3;
-}
