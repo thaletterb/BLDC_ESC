@@ -50,45 +50,20 @@
 #include "Board.h"
 
 #include "PWM.h"
-
-#define TASKSTACKSIZE   512
-
-Task_Struct task0Struct;
-Char task0Stack[TASKSTACKSIZE];
-
-/*
- *  ======== sendPulseToESC ========
- *  Toggle the Board_LED0. The Task_sleep is determined by arg0 which
- *  is configured for the heartBeat Task instance.
- */
-Void sendPulseToESC(void)
-{
-    while (1) {
-        Semaphore_pend(semaphore0, BIOS_WAIT_FOREVER);
-
-        PWM_setDutyCycleTimeOn(1.10);
-        GPIO_toggle(Board_LED0);
-    }
-}
+#include "MotorControl.h"
 
 /*
  *  ======== main ========
  */
 int main(void)
 {
-    Task_Params taskParams;
-
     /* Call board init functions */
     Board_initGeneral();
     Board_initGPIO();
-    PWM_init();
 
-    /* Construct heartBeat Task  thread */
-    Task_Params_init(&taskParams);
-    taskParams.stackSize = TASKSTACKSIZE;
-    taskParams.stack = &task0Stack;
-    taskParams.instance->name = "heartBeat";
-    Task_construct(&task0Struct, (Task_FuncPtr)sendPulseToESC, &taskParams, NULL);
+    // Initialize all system modules
+    PWM_init();
+    MC_init();
 
     /* Start BIOS */
     BIOS_start();
@@ -96,13 +71,9 @@ int main(void)
     return (0);
 }
 
-uint32_t count = 0;
 void CLK_50Hz()
 {
-    if(count++ == 250)
-    {
-        Semaphore_post(semaphore0);
-    }
-
+    GPIO_toggle(Board_LED0);
+    MC_50Hz_CLK();
 }
 
