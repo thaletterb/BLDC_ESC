@@ -10,10 +10,15 @@
 #include <msp430.h>
 #include <timer_a.h>
 
-
-#define SMCLK_FREQUENCY             1048576UL   // 1Mhz
+/*
+ * Defines
+ */
+#define SMCLK_FREQUENCY_HZ          1048576UL   // 1Mhz
 #define TIMERA_20MS_PERIOD_TICKS    20972U
 
+/*
+ * Global Variables
+ */
 PWM_S PWM;
 
 /*
@@ -29,7 +34,7 @@ static uint16_t pwm_dutyCycleToTicks(const float dutyCycle)
 static uint16_t pwm_timeOnToTicks(const float timeOnMS)
 {
     // time on = 1.0 ms ticks = 1050
-    return (uint16_t) ((timeOnMS)*(0.001)*SMCLK_FREQUENCY);
+    return (uint16_t) ((timeOnMS)*(0.001)*SMCLK_FREQUENCY_HZ);
 }
 
 /*
