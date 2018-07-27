@@ -49,8 +49,8 @@
 /* Board Header file */
 #include "Board.h"
 
-#include "PWM.h"
-#include "MotorControl.h"
+#include "ESC.h"
+
 
 /*
  *  ======== main ========
@@ -62,8 +62,7 @@ int main(void)
     Board_initGPIO();
 
     // Initialize all system modules
-    PWM_init();
-    MC_init();
+    ESC_init();
 
     /* Start BIOS */
     BIOS_start();
@@ -71,9 +70,4 @@ int main(void)
     return (0);
 }
 
-void CLK_50Hz()
-{
-    GPIO_toggle(Board_LED0);
-    MC_50Hz_CLK();
-}
 
