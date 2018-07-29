@@ -1,37 +1,39 @@
-## Example Summary
+## MSP430 Brushless DC Motor Electronic Speed Controller 
 
-This example is intended to be a starting point for new development where
-a minimal footprint is needed.
+Development of an MSP430 based electronic speed controller. 
 
-## Peripherals Exercised
+## Background 
 
-* `Board_LED0` - Indicates that the board was initialized within `main()`
+* Electronic Speed Control (ESC) is an electronic circuit that controls and regulates the speed of an electric motor. 
+* SIMONK ESCs are commonly used for applications such as quadcopters or RC cars
+* The purpose of this project is to develop an MSP430 based ESC which replicates the functionality of an off the shelf controller
 
-## Example Usage
+## Hardware Architecture 
 
-* The example lights `Board_LED0` as part of the initialization in `main()`.
-Then a heartBeat task toggles the LED at a rate determined by the `arg0`
-parameter for the constructed Task instance in the .c file.
+* Current implementation consists of:
+  * 1 MSP430F5529 Launchpad
+  * 1 LHI 2212 920KV Brushless Motor
+  * 1 SIMONK 30A ESC
 
-## Application Design Details
+* Future implementation will remove the SIMONK ESC and will use:
+  * L6234 motor driver IC
 
-This examples is the same as the __Empty__ example except many development
-and debug features are disabled. For example:
+## Software Architecture
 
-* No logging is enabled
-* No assert checking is enabled
-* No Kernel Idle task
-* Non-Instrumented driver modules are used
-* No stack overflow checking
+* TI-RTOS
+* Current phase of implementation consists of:
+  * Using MSP430 to generate varying width PWM signals to the SIMONK ESC
 
-> Please refer to the __Memory Footprint Reduction__ section in the
-TI-RTOS User Guide *spruhd4.pdf* for a complete and detailed list of the
-differences between the empty minimal and empty projects.
+## Software Requirements
+
+Software is based on MSP430F5529 launchpad, running TI-RTOS.
+
+* Code Composer Studio (ver 7.1.0)
+  * http://www.ti.com/tool/CCSTUDIO
+* TI-RTOS MSP43x 2.20.00.06 
+  * http://software-dl.ti.com/dsps/dsps_public_sw/sdo_sb/targetcontent/tirtos/index.html
 
 ## References
-* For GNU and IAR users, please read the following website for details
-  about enabling [semi-hosting](http://processors.wiki.ti.com/index.php/TI-RTOS_Examples_SemiHosting)
-  in order to view console output.
-
-* For more help, search either the SYS/BIOS User Guide or the TI-RTOS
-Getting Started Guide within your TI-RTOS installation.
+* https://en.wikipedia.org/wiki/Electronic_speed_control 
+* https://www.instructables.com/id/Make-Your-Own-ESC/ 
+* http://www.ti.com/lit/ug/spruhu4e/spruhu4e.pdf
