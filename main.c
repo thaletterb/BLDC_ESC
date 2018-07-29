@@ -45,6 +45,7 @@
 
 /* TI-RTOS Header files */
 #include <ti/drivers/GPIO.h>
+#include "ADC.h"
 
 /* Board Header file */
 #include "Board.h"
@@ -60,6 +61,7 @@ int main(void)
     /* Call board init functions */
     Board_initGeneral();
     Board_initGPIO();
+    ADC_init();
 
     // Initialize all system modules
     ESC_init();

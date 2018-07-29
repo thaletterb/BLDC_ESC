@@ -14,6 +14,7 @@ Development of an MSP430 based electronic speed controller.
   * 1 MSP430F5529 Launchpad
   * 1 LHI 2212 920KV Brushless Motor
   * 1 SIMONK 30A ESC
+  * 1 Potentiometer to act as throttle input
 
 * Future implementation will remove the SIMONK ESC and will use:
   * L6234 motor driver IC
@@ -23,6 +24,7 @@ Development of an MSP430 based electronic speed controller.
 * TI-RTOS
 * Current phase of implementation consists of:
   * Using MSP430 to generate varying width PWM signals to the SIMONK ESC
+  * Potentiometer attached to analog input P6.1
 
 ## Software Requirements
 
