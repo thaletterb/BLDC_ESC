@@ -25,6 +25,8 @@ Development of an MSP430 based electronic speed controller.
 * Current phase of implementation consists of:
   * Using MSP430 to generate varying width PWM signals to the SIMONK ESC
   * Potentiometer attached to analog input P6.1
+* Periodics
+  * 50Hz CLK
 
 ## Software Requirements
 
