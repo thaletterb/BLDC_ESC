@@ -11,6 +11,7 @@
 
 #include "MotorControl.h"
 #include "PWM.h"
+#include "ADC.h"
 /*
  * Typedefs
  */
@@ -42,6 +43,9 @@ void ESC_init(void)
 
 void ESC_50Hz_CLK(void)
 {
-    GPIO_toggle(Board_LED0);
+    if(ADC_getOneReading() < ADC12_FULL_RESOLUTION/2U)
+    {
+        GPIO_toggle(Board_LED0);
+    }
     MC_50Hz_CLK();
 }
