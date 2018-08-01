@@ -11,6 +11,8 @@
 
 #include "ADC.h"
 
+#include <string.h>
+
 /*
  * Defines
  */
@@ -19,24 +21,36 @@
 /*
  * Global Variables
  */
-
+ADC_s ADC;
 
 /*
  * Private Functions
  */
+static void sample50HzSignals(void)
+{
+    // Sample
+    ADC.throttleInput = ADC_getOneReading();
+}
 
 
 /*
  * Public Functions
  */
+// ADC_init()
+// Initializes the ADC module
+void ADC_init(void)
+{
+    memset(&ADC, 0, sizeof(ADC_s));
+}
 
-// ADC_init():
-// Initializes ADC12 module into the following default state:
+
+// ADC_initPeripheral():
+// Initializes ADC12 peripheral into the following default state:
 //  - P6.1, connected to ADC channel 1
 //  - Internal Vref+ = Vcc, Vref- = Vss (GND)
 //  - Clocked by ADC12OSC
 //  - Stores conversion in memory buffer 0
-void ADC_init(void)
+void ADC_initPeripheral(void)
 {
     GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P6, GPIO_PIN1);
 
@@ -92,6 +106,11 @@ void ADC_configureMemoryParameters(ADC12_A_configureMemoryParam params)
     ADC12_A_configureMemory(
             __MSP430_BASEADDRESS_ADC12_PLUS__,
             &params);
+}
+
+void ADC_50Hz_CLK(void)
+{
+    sample50HzSignals();
 }
 
 // ADC_getOneReading():

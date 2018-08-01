@@ -9,9 +9,12 @@
 #include <ti/drivers/GPIO.h>
 #include "board.h"
 
-#include "MotorControl.h"
 #include "PWM.h"
 #include "ADC.h"
+
+#include "MotorControl.h"
+#include "Throttle.h"
+
 /*
  * Typedefs
  */
@@ -37,15 +40,19 @@
  */
 void ESC_init(void)
 {
+    // Peripheral Init
+    ADC_initPeripheral();
     PWM_init();
+
+    // Module Init
+    ADC_init();
+    THROTTLE_init();
     MC_init();
 }
 
 void ESC_50Hz_CLK(void)
 {
-    if(ADC_getOneReading() < ADC12_FULL_RESOLUTION/2U)
-    {
-        GPIO_toggle(Board_LED0);
-    }
+    ADC_50Hz_CLK();
+    THROTTLE_50Hz_CLK();
     MC_50Hz_CLK();
 }

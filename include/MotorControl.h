@@ -40,6 +40,10 @@ extern MC_S MC;
  * Public Functions
  */
 void MC_init(void);
+
+void MC_setPulseWidth(float timeOnMS);
+
+// Periodics
 void MC_50Hz_CLK(void);
 
 #endif /* MOTORCONTROL_H_ */

@@ -22,11 +22,16 @@
 /*
  * Typedefs
  */
+typedef struct s_ADC
+{
+    uint16_t    throttleInput;
+}ADC_s;
 
 
 /*
  * Global Variables
  */
+extern ADC_s ADC;
 
 
 /*
@@ -38,10 +43,13 @@
  * Public Functions
  */
 void ADC_init(void);
+void ADC_initPeripheral(void);
+
 void ADC_enable(void);
 void ADC_disable(void);
 void ADC_configureMemoryParameters(ADC12_A_configureMemoryParam params);
 
+void ADC_50Hz_CLK(void);
 uint16_t ADC_getOneReading(void);
 
 
