@@ -6,10 +6,10 @@
  */
 
 /* TI-RTOS Header files */
-#include <IPWM.h>
 #include <ti/drivers/GPIO.h>
 #include "board.h"
 
+#include <IPWM.h>
 #include "ADC.h"
 
 #include "MotorControl.h"
