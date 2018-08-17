@@ -1,15 +1,18 @@
 /*
- * PWM.c
+ * PWMDriver.c
  *
- *  Created on: May 26, 2018
+ *  Created on: Aug 16, 2018
  *      Author: brianvuong
  */
 
-#include "PWM.h"
+#include "IPWM.h"
+
+#include "PWMDriver.h"
 
 #include <msp430.h>
 #include <timer_a.h>
 
+#include <string.h>
 /*
  * Defines
  */
@@ -19,7 +22,8 @@
 /*
  * Global Variables
  */
-PWM_S PWM;
+PWM_S PWM;              // PWM interface global variable
+PwmDriver_S PwmDriver;  // PwmDriver
 
 /*
  * Private Functions
@@ -40,6 +44,17 @@ static uint16_t pwm_timeOnToTicks(const float timeOnMS)
 /*
  * Public Functions
  */
+// Enables the PWM module
+void PWM_enable(void)
+{
+    PWM.bit.enabled = 1U;
+}
+
+// Disables the PWM module
+void PWM_disable(void)
+{
+    PWM.bit.enabled = 0U;
+}
 
 // Initializes TimerA in compare mode to create a PWM output on TA0.1
 // P1.2 with period of 20ms and an initial duty cycle of 2.5% (0.5ms period)
@@ -52,6 +67,9 @@ void PWM_init(void)
     TA0CCTL1 = OUTMOD_7;                      // CCR1 reset/set
     TA0CCR1 = 525;                            // CCR1 PWM duty cycle
     TA0CTL = TASSEL_2 + MC_1 + TACLR + ID_3;
+
+    memset(&PWM, 0, sizeof(PWM));
+    memset(&PwmDriver, 0, sizeof(PwmDriver));
 }
 
 // Reconfigures Timer A's PWM duty cycle

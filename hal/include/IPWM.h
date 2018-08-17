@@ -1,12 +1,12 @@
 /*
- * PWM.h
+ * IPWM.h
  *
  *  Created on: May 26, 2018
  *      Author: brianvuong
  */
 
-#ifndef PWM_H_
-#define PWM_H_
+#ifndef IPWM_H_
+#define IPWM_H_
 
 #include <stdint.h>
 
@@ -19,8 +19,28 @@ typedef struct PWM_s
     unsigned long   period;
     double          dutyCyle;
     uint8_t         mode;
+    struct{
+        uint8_t enabled:1;
+    }bit;
+
 }PWM_S;
 
+typedef enum
+{
+    PWM_PHASE_A,
+    PWM_PHASE_B,
+    PWM_PHASE_C,
+
+    PWM_NUM_PHASES
+}PWM_phase_E;
+
+typedef enum
+{
+    PWM_SIDE_HIGH,
+    PWM_SIDE_LOW,
+
+    PWM_NUM_SIDES
+}PWM_side_E;
 /*
  * Global Variables
  */
@@ -33,8 +53,10 @@ extern PWM_S PWM;
 /*
  * Public Functions
  */
-void PWM_init(void);
+extern void PWM_init(void);
+extern void PWM_enable(void);
+extern void PWM_disable(void);
 void PWM_setDutyCycle(double dutyCycle);
 void PWM_setDutyCycleTimeOn(double timeOnMS);
 
-#endif /* PWM_H_ */
+#endif /* IPWM_H_ */
