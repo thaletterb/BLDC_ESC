@@ -5,9 +5,8 @@
  *      Author: brianvuong
  */
 
+#include <IPWM.h>
 #include "MotorControl.h"
-#include "PWM.h"
-
 #include <string.h>
 
 /*
