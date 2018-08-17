@@ -43,5 +43,8 @@ extern PwmDriver_S PwmDriver;
  * Public Functions
  */
 extern void PwmDriver_init(void);
+extern void PwmDriver_setDutyCycle(double dutyCycle);
+extern void PwmDriver_setDutyCycleTimeOn(double timeOnMS);
+
 
 #endif /* PWMDRIVER_H_ */

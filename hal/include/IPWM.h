@@ -19,10 +19,10 @@ typedef struct PWM_s
     unsigned long   period;
     double          dutyCyle;
     uint8_t         mode;
+
     struct{
         uint8_t enabled:1;
     }bit;
-
 }PWM_S;
 
 typedef enum
@@ -56,7 +56,5 @@ extern PWM_S PWM;
 extern void PWM_init(void);
 extern void PWM_enable(void);
 extern void PWM_disable(void);
-void PWM_setDutyCycle(double dutyCycle);
-void PWM_setDutyCycleTimeOn(double timeOnMS);
 
 #endif /* IPWM_H_ */
