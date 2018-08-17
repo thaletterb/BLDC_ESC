@@ -5,7 +5,10 @@
  *      Author: brianvuong
  */
 
-#include <IPWM.h>
+#include "IPWM.h"
+
+#include "PwmDriver.h"
+
 #include "MotorControl.h"
 #include <string.h>
 
@@ -34,7 +37,7 @@ mc_s mc;
 // Should only be called on transition between MC.states
 static void mc_sendPulseToESC(void)
 {
-    PWM_setDutyCycleTimeOn(mc.pulseTimeOnMS);
+    PwmDriver_setDutyCycleTimeOn(mc.pulseTimeOnMS);
 }
 
 
