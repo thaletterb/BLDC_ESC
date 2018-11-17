@@ -84,6 +84,13 @@ extern "C" {
 
 #define Board_GPIO_P1_6             MSP_EXP430F5529LP_P1_6
 
+#define Board_PH1_EN                MSP_EXP430F5529LP_P4_0
+#define Board_PH1_IN                MSP_EXP430F5529LP_P2_6
+#define Board_PH2_EN                MSP_EXP430F5529LP_P3_7
+#define Board_PH2_IN                MSP_EXP430F5529LP_P2_3
+#define Board_PH3_EN                MSP_EXP430F5529LP_P8_2
+#define Board_PH3_IN                MSP_EXP430F5529LP_P8_1
+
 #ifdef __cplusplus
 }
 #endif
