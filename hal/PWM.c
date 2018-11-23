@@ -41,17 +41,21 @@ static uint16_t pwm_timeOnToTicks(const float timeOnMS)
  * Public Functions
  */
 
-// Initializes TimerA in compare mode to create a PWM output on TA0.1
-// P1.2 with period of 20ms and an initial duty cycle of 2.5% (0.5ms period)
+// Initializes TimerA in compare mode to create a PWM output on TA0.1, TA0.2, TA0.3
+// with period of 50us, and each "on pulse" of 8us
 void PWM_init(void)
 {
-    WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
-    P1DIR |= BIT2+BIT3;                       // P1.2 and P1.3 output
-    P1SEL |= BIT2+BIT3;                       // P1.2 and P1.3 options select
-    TA0CCR0 = TIMERA_20MS_PERIOD_TICKS-1;     // PWM Period
-    TA0CCTL1 = OUTMOD_7;                      // CCR1 reset/set
-    TA0CCR1 = 525;                            // CCR1 PWM duty cycle
-    TA0CTL = TASSEL_2 + MC_1 + TACLR + ID_3;
+    WDTCTL      = WDTPW + WDTHOLD;              // Stop WDT
+    P1DIR       |= BIT2+BIT3+BIT4;              // P1.2 and P1.3 output
+    P1SEL       |= BIT2+BIT3+BIT4;              // P1.2 and P1.3 options select
+    TA0CCR0     = 50-1;                         // PWM Period 50us (~8us on/~42us off)
+    TA0CCTL1    = OUTMOD_7;                     // CCR1 reset/set
+    TA0CCR1     = 8;                            // CCR1 PWM duty cycle
+    TA0CCTL2    = OUTMOD_7;                     // CCR2 reset/set
+    TA0CCR2     = 8;                            // CCR2 PWM duty cycle
+    TA0CCTL3    = OUTMOD_7;                     // CCR3 reset/set
+    TA0CCR3     = 8;                            // CCR3 PWM duty cycle
+    TA0CTL      = TASSEL_2 + MC_1 + TACLR + ID_3;
 }
 
 // Reconfigures Timer A's PWM duty cycle

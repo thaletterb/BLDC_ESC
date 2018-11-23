@@ -19,6 +19,17 @@ typedef struct PWM_s
     unsigned long   period;
     double          dutyCyle;
     uint8_t         mode;
+
+    struct {
+        uint8_t enabled:1;      // If PWM is initialized and enabled
+        uint8_t ph1Disabled:1;  // PH1 is off (always LOW)
+        uint8_t ph2Disabled:1;  // PH2 is off (always LOW)
+        uint8_t ph3Disabled:1;  // PH3 is off (always LOW)
+        uint8_t unused3:1;
+        uint8_t unused2:1;
+        uint8_t unused1:1;
+        uint8_t unused0:1;
+    }bit;
 }PWM_S;
 
 /*
