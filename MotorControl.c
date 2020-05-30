@@ -12,11 +12,17 @@
 
 /* TI-RTOS Header files */
 #include <ti/drivers/GPIO.h>
+#include <ti/sysbios/knl/Task.h>
+#include <ti/sysbios/knl/Clock.h>
+#include <xdc/cfg/global.h>
+
+
 #include "board.h"
 
 // TODO!
 #include <msp430.h>
 #include <timer_a.h>
+#include "Utility.h"
 
 /*
  * Typedefs
@@ -54,7 +60,23 @@ mc_s mc;
 /*
  * Private Functions
  */
+static void zeroCrossingComparatorInit(void)
+{
+    // TODO: Move this somewhere more appropriate
+    // void COMPB_init();
+    {
+        CBCTL0 |= (CBIMEN | CBIPEN);                                        // Enable (-) and (+) terminal to the comparator
+        CBCTL0 &= ~(CBIPSEL3 | CBIPSEL2 | CBIPSEL1 | CBIPSEL0);             // (+) to CB0/P6.0
+        CBCTL0 |= (CBIMSEL0);                                               // (-) to CB1/P6.1
 
+        //CBCTL1 |= (CBF);                                                    // Filter CBOUT
+        CBCTL1 &= ~(CBIES);                                                 // Rising edge for CBIFG
+
+        CBINT &= ~(CBIFG);                                                  // Clear any errant flags
+
+        CBCTL1 |= (CBON);                                                   // Turn comparator on
+    }
+}
 /*
  * Commutation functions
  * Step:            Active Switches:
@@ -101,15 +123,23 @@ static void step0(void)
     phaseThreeOff();
 
     // Disable PWM on IN2/IN3
-    TA0CCR1     = 8U;
-    TA0CCR2     = 0U;
-    TA0CCR3     = 0U;
+    TA0CCR1     = timer2_periodUsToCounts(PWM_DUTY_CYCLE);
+    TA0CCR2     = 0xFFFF;
+    TA0CCR3     = 0x0U;
 
     GPIO_write(Board_PH1_EN, 1);
     GPIO_write(Board_PH2_EN, 1);
 
     GPIO_write(Board_PH1_IN, 1);
     GPIO_write(Board_PH2_IN, 0);
+
+    // C Falling -> CBOUT rising edge
+    CBCTL0 &= ~(CBIMSEL3 | CBIMSEL2 | CBIMSEL1 | CBIMSEL0);             // (-) to CB3/P6.3
+    CBCTL0 |= (CBIMSEL1 | CBIMSEL0);
+
+    CBCTL1 &= ~(CBIES);                                                 // Rising edge for CBIFG
+
+    CBINT &= ~(CBIFG);                                                  // Clear any errant flags
 }
 
 // PH1 HI, PH3 LO
@@ -118,15 +148,23 @@ static void step1(void)
     phaseTwoOff();
 
     // Disable PWM on IN2/IN3
-    TA0CCR1     = 8U;
-    TA0CCR2     = 0U;
-    TA0CCR3     = 0U;
+    TA0CCR1     = timer2_periodUsToCounts(PWM_DUTY_CYCLE);
+    TA0CCR2     = 0x0U;
+    TA0CCR3     = 0xFFFF;
 
     GPIO_write(Board_PH1_EN, 1);
     GPIO_write(Board_PH3_EN, 1);
 
     GPIO_write(Board_PH1_IN, 1);
     GPIO_write(Board_PH3_IN, 0);
+
+    // B Rising - CBOUT Falling edge
+    CBCTL0 &= ~(CBIMSEL3 | CBIMSEL2 | CBIMSEL1 | CBIMSEL0);             // (-) to CB2/P6.2
+    CBCTL0 |= (CBIMSEL1);
+
+    CBCTL1 |= (CBIES);                                                  // Falling edge for CBIFG
+
+    CBINT &= ~(CBIFG);                                                  // Clear any errant flags
 }
 
 // PH2 HI, PH3 LO
@@ -135,15 +173,23 @@ static void step2(void)
     phaseOneOff();
 
     // Disable PWM on IN1/IN3
-    TA0CCR1     = 0U;
-    TA0CCR2     = 8U;
-    TA0CCR3     = 0U;
+    TA0CCR1     = 0x0;
+    TA0CCR2     = timer2_periodUsToCounts(PWM_DUTY_CYCLE);
+    TA0CCR3     = 0xFFFF;
 
     GPIO_write(Board_PH2_EN, 1);
     GPIO_write(Board_PH3_EN, 1);
 
     GPIO_write(Board_PH2_IN, 1);
     GPIO_write(Board_PH3_IN, 0);
+
+    // A Falling - CBOUT rising edge
+    CBCTL0 &= ~(CBIMSEL3 | CBIMSEL2 | CBIMSEL1 | CBIMSEL0);             // (-) to CB1/P6.1
+    CBCTL0 |= (CBIMSEL0);
+
+    CBCTL1 &= ~(CBIES);                                                 // Rising edge for CBIFG
+
+    CBINT &= ~(CBIFG);                                                  // Clear any errant flags
 }
 
 // PH2 HI, PH1 LO
@@ -152,15 +198,23 @@ static void step3(void)
     phaseThreeOff();
 
     // Disable PWM on IN1/IN3
-    TA0CCR1     = 0U;
-    TA0CCR2     = 8U;
-    TA0CCR3     = 0U;
+    TA0CCR1     = 0xFFFF;
+    TA0CCR2     = timer2_periodUsToCounts(PWM_DUTY_CYCLE);
+    TA0CCR3     = 0x0U;
 
     GPIO_write(Board_PH2_EN, 1);
     GPIO_write(Board_PH1_EN, 1);
 
     GPIO_write(Board_PH2_IN, 1);
     GPIO_write(Board_PH1_IN, 0);
+
+    // C Rising - CBOUT Falling edge
+    CBCTL0 &= ~(CBIMSEL3 | CBIMSEL2 | CBIMSEL1 | CBIMSEL0);             // (-) to CB3/P6.3
+    CBCTL0 |= (CBIMSEL1 | CBIMSEL0);
+
+    CBCTL1 |= (CBIES);                                                  // Falling edge for CBIFG
+
+    CBINT &= ~(CBIFG);                                                  // Clear any errant flags
 }
 
 // PH3 HI, PH1 LO
@@ -169,15 +223,23 @@ static void step4(void)
     phaseTwoOff();
 
     // Disable PWM on IN1/IN2
-    TA0CCR1     = 0U;
-    TA0CCR2     = 0U;
-    TA0CCR3     = 8U;
+    TA0CCR1     = 0xFFFF;
+    TA0CCR2     = 0x0U;
+    TA0CCR3     = timer2_periodUsToCounts(PWM_DUTY_CYCLE);
 
     GPIO_write(Board_PH3_EN, 1);
     GPIO_write(Board_PH1_EN, 1);
 
     GPIO_write(Board_PH3_IN, 1);
     GPIO_write(Board_PH1_IN, 0);
+
+    // B Falling - CBOUT rising edge
+    CBCTL0 &= ~(CBIMSEL3 | CBIMSEL2 | CBIMSEL1 | CBIMSEL0);             // (-) to CB2/P6.2
+    CBCTL0 |= (CBIMSEL1);
+
+    CBCTL1 &= ~(CBIES);                                                 // Rising edge for CBIFG
+
+    CBINT &= ~(CBIFG);                                                  // Clear any errant flags
 }
 
 // PH3 HI, PH2 LO
@@ -186,15 +248,23 @@ static void step5(void)
     phaseOneOff();
 
     // Disable PWM on IN1/IN2
-    TA0CCR1     = 0U;
-    TA0CCR2     = 0U;
-    TA0CCR3     = 8U;
+    TA0CCR1     = 0x0U;
+    TA0CCR2     = 0xFFFF;
+    TA0CCR3     = timer2_periodUsToCounts(PWM_DUTY_CYCLE);
 
     GPIO_write(Board_PH3_EN, 1);
     GPIO_write(Board_PH2_EN, 1);
 
     GPIO_write(Board_PH3_IN, 1);
     GPIO_write(Board_PH2_IN, 0);
+
+    // A Rising - CBOUT Falling edge
+    CBCTL0 &= ~(CBIMSEL3 | CBIMSEL2 | CBIMSEL1 | CBIMSEL0);             // (-) to CB1/P6.1
+    CBCTL0 |= (CBIMSEL0);
+
+    CBCTL1 |= (CBIES);                                                  // Falling edge for CBIFG
+
+    CBINT &= ~(CBIFG);                                                  // Clear any errant flags
 }
 
 // Should only be called on transition between MC.states
@@ -236,18 +306,15 @@ void MC_init(void)
 {
     memset(&MC, 0, sizeof(MC));
     MC.state = MC_ESC_ARMING;
+    zeroCrossingComparatorInit();
 }
 
 void MC_setPulseWidth(float timeOnMS)
 {
     mc.pulseTimeOnMS = timeOnMS;
 }
-
-void MC_50Hz_CLK(void)
+static void bldc_move(void)
 {
-    // Process state machine
-    //mc_processStates_50Hz(); // TODO: Still needed?
-    // Send appropriate pulse
     switch(mc.index)
     {
         case 0:
@@ -269,9 +336,47 @@ void MC_50Hz_CLK(void)
             step5();
             break;
     }
-    if(++mc.index > 5U)
+    mc.index++;
+    mc.index %=6;
+
+}
+
+void MC_50Hz_CLK(void)
+{
+}
+
+void TA2_CCR0_ISR(void)
+{
+    static uint32_t rampStepUs = 10000;
+
+    if(rampStepUs > 100)
     {
-        mc.index = 0U;
+        bldc_move();
+        TA2CCR0 = timer2_periodUsToCounts(rampStepUs);
+        rampStepUs -= 200;
     }
+    else
+    {
+        //bldc_move();
+        CBINT |= (CBIE);
+    }
+    GPIO_toggle(Board_LED1);
+}
+
+void zero_crossing_ISR(void)
+{
+    uint8_t i;
+
+    for(i = 0; i < 150; i++) {
+      if(mc.index & 1){  // Odd steps look for falling BEMF
+        if(!(CBCTL1 & CBOUT)) i -= 1;    // CBOUT not set
+      }
+      else {  // Even steps look for rising BEMF
+        if((CBCTL1 & CBOUT))  i -= 1;    // CBOUT set
+      }
+    }
+    bldc_move();
+    GPIO_toggle(Board_LED0);
+    CBINT &= ~(CBIFG);
 }
 

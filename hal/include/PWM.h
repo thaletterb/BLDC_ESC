@@ -47,5 +47,6 @@ extern PWM_S PWM;
 void PWM_init(void);
 void PWM_setDutyCycle(double dutyCycle);
 void PWM_setDutyCycleTimeOn(double timeOnMS);
+uint32_t timer2_periodUsToCounts(uint32_t periodInUs);
 
 #endif /* PWM_H_ */
