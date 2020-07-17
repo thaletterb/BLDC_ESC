@@ -56,3 +56,10 @@ void ESC_50Hz_CLK(void)
     THROTTLE_50Hz_CLK();
     MC_50Hz_CLK();
 }
+
+void ESC_1Hz_CLK(void)
+{
+    // Heartbeat
+    GPIO_toggle(Board_RED_LED);
+
+}

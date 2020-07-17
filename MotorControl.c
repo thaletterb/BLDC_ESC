@@ -273,6 +273,5 @@ void MC_50Hz_CLK(void)
     {
         mc.index = 0U;
     }
-    GPIO_toggle(Board_LED0);
 }
 

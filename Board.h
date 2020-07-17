@@ -91,6 +91,8 @@ extern "C" {
 #define Board_PH3_EN                MSP_EXP430F5529LP_P8_2
 #define Board_PH3_IN                MSP_EXP430F5529LP_P8_1
 
+#define Board_RED_LED               MSP_EXP430F5529LP_P2_0
+
 #ifdef __cplusplus
 }
 #endif
