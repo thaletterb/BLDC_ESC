@@ -16,11 +16,11 @@ BIOS_INC  = -I"/Users/brianvuong/ti/tirtos_msp43x_2_20_00_06/products/bios_6_46_
 
 TARGET_INC = -I"/Users/brianvuong/ti/tirtos_msp43x_2_20_00_06/products/bios_6_46_00_23/packages/"
 
-INCS = $(BIOS_INC) $(TARGET_INC)  --include_path="/Applications/ti/ccsv7/ccs_base/msp430/include" --include_path="/Users/brianvuong/workspace_v7/BLDC_ESC" --include_path="/Users/brianvuong/workspace_v7/BLDC_ESC" --include_path="/Users/brianvuong/ti/tirtos_msp43x_2_20_00_06/products/msp430_driverlib_2_70_01_01a/driverlib/MSP430F5xx_6xx" --include_path="/Applications/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/include" 
+INCS = $(BIOS_INC) $(TARGET_INC)  --include_path="/Users/brianvuong/workspace_v7/BLDC_ESC/hal/include" --include_path="/Users/brianvuong/workspace_v7/BLDC_ESC/include" --include_path="/Applications/ti/ccsv8/ccs_base/msp430/include" --include_path="/Users/brianvuong/workspace_v7/BLDC_ESC" --include_path="/Users/brianvuong/workspace_v7/BLDC_ESC" --include_path="/Users/brianvuong/ti/tirtos_msp43x_2_20_00_06/products/msp430_driverlib_2_70_01_01a/driverlib/MSP430F5xx_6xx" --include_path="/Applications/ti/ccsv8/tools/compiler/ti-cgt-msp430_16.9.11.LTS/include" 
 
-CC = /Applications/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/bin/cl430 --abi=eabi -c $(CCOPTS) -I /Applications/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/include
-ASM = /Applications/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/bin/cl430 --abi=eabi -c $(CCOPTS) -I /Applications/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/include
-AR = /Applications/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/bin/ar430 rq
+CC = /Applications/ti/ccsv8/tools/compiler/ti-cgt-msp430_16.9.11.LTS/bin/cl430 --abi=eabi -c $(CCOPTS) -I /Applications/ti/ccsv8/tools/compiler/ti-cgt-msp430_16.9.11.LTS/include
+ASM = /Applications/ti/ccsv8/tools/compiler/ti-cgt-msp430_16.9.11.LTS/bin/cl430 --abi=eabi -c $(CCOPTS) -I /Applications/ti/ccsv8/tools/compiler/ti-cgt-msp430_16.9.11.LTS/include
+AR = /Applications/ti/ccsv8/tools/compiler/ti-cgt-msp430_16.9.11.LTS/bin/ar430 rq
 
 DEL = rm -f
 CP = cp -f
